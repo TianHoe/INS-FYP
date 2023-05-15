@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true" color="toolbar" class="ion-padding">
+  <div class="d-flex flex-column h-100 justify-content-center align-items-center">
+    <div class="d-flex flex-column align-items-center w-100">
+      <div class="app-logo-container">
+        <ion-img src="../../assets/icon/logo.png"></ion-img>
+      </div>
+      <div><h4 class="font-weight-bold">OnRouteX</h4></div>
+    </div>
+    
+    <div>
+      <ion-card class="px-3 py-4 mx-4 rounded">
+        <ion-card-content>
+          <form [formGroup]="loginForm" (ngSubmit)="LoginUser(loginForm.value)">
+            <ion-item>
+              <!-- <ion-label><ion-icon name="person-sharp"></ion-icon></ion-label> -->
+              <ion-input formControlName="judgeEmail" placeholder="Email address" type="email"></ion-input>
+            </ion-item>
+            <!-- Error message -->
+            <div class="mt-2">
+              <ng-container *ngFor="let validation of validationUserMessage.judgeEmail">
+                <div class="text-danger d-flex" 
+                  *ngIf="loginForm.get('judgeEmail')!.hasError(validation.type) && 
+                  (loginForm.get('judgeEmail')!.dirty || loginForm.get('judgeEmail')!.touched)">
+                  <div><ion-icon name="information-circle-sharp"></ion-icon></div>
+                  <div class="align-self-start">{{ validation.message }}</div>
+                </div>
+              </ng-container>
+            </div>
+
+            <ion-item class="mt-2">
+              <!-- <ion-label><ion-icon name="lock-closed-sharp"></ion-icon></ion-label> -->
+              <ion-input formControlName="judgePassword" type="password" placeholder="Password"></ion-input>
+            </ion-item>
+            <!-- Error message -->
+            <div class="mt-2">
+              <ng-container *ngFor="let validation of validationUserMessage.judgePassword">
+                <div class="text-danger d-flex" 
+                  *ngIf="loginForm.get('judgePassword')!.hasError(validation.type) && 
+                  (loginForm.get('judgePassword')!.dirty || loginForm.get('judgePassword')!.touched)">
+                  <div><ion-icon name="information-circle-sharp"></ion-icon></div>
+                  <div class="align-self-start">{{ validation.message }}</div>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="text-danger d-flex" *ngIf="errorMessage">
+              <div><ion-icon name="information-circle-sharp"></ion-icon></div>
+              <div class="align-self-start">{{ errorMessage }}</div>
+            </div>
+
+            <div class="mt-4 login-button text-center">
+              <ion-button type="submit" fill="outline" [disabled]="!loginForm.valid">Login</ion-button>
+            </div>
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

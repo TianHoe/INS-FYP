@@ -1,0 +1,19 @@
+ion-item::part(native) {
+    padding-left: 0;
+}
+
+.swal2-input {
+    margin: 0;
+}
+
+@media (max-width: 767.98px) {
+    .app-logo-container {
+        width: 20%;
+    }
+}
+
+@media (min-width: 768px) {
+    .app-logo-container {
+        width: 10%;
+    }
+}

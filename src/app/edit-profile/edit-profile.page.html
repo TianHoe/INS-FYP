@@ -1,0 +1,33 @@
+<app-topnav-backbtn></app-topnav-backbtn>
+
+<ion-content class="ion-padding">
+  <ion-title class="pl-0 font-weight-bold">Edit Profile</ion-title>
+
+  <form class="edit-profile-container">
+    <div class="d-flex flex-column align-items-center">
+      <img class="rounded-circle pb-3 profile-pic" src="https://icons.veryicon.com/png/o/miscellaneous/xinjiang-tourism/user-169.png">
+      <p class="user-name mb-0">{{ userDetails.name }}</p>
+      <p class="user-id">{{ userDetails.eventID }}</p>
+    </div>    
+
+    <div class="profile-details">
+      <ion-item>
+        <ion-label position="stacked">Contact number</ion-label>
+        <ion-input value="{{ userDetails.contactNumber }}"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email address</ion-label>
+        <ion-input value="{{ userDetails.email }}"></ion-input>
+      </ion-item>
+
+      <div class="save-profile-button mt-3">
+        <ion-button expand="block" routerLink="/profile" color="success">Save changes</ion-button>
+      </div>
+
+      <div class="cancel-button mt-3">
+        <ion-button expand="block" routerLink="/profile" color="danger">Cancel</ion-button>
+      </div>
+    </div>
+  </form>
+</ion-content>
