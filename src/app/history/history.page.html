@@ -1,0 +1,24 @@
+<app-topnav></app-topnav>
+
+<ion-content class="ion-padding">
+  <ion-title class="pl-0 font-weight-bold">History</ion-title>
+  <ion-text>Booth evaluated: {{ evaluatedCount }}/{{ assignedCount }}</ion-text>
+
+  <div *ngFor="let booth of sortedBoothList">
+    <ion-card *ngIf="evaluatedCount > 0 && booth.evaluated" class="mx-0" color="light">
+      <ion-card-header>
+        <ion-card-title class="font-weight-bold">{{ booth.title }}</ion-card-title>
+        <ion-card-subtitle>Score: {{ booth.totalScore }}</ion-card-subtitle>
+      </ion-card-header>
+    
+      <ion-card-content>
+        <ion-text>Comments: {{ booth.comment }}</ion-text>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- If no booth has been evaluated -->
+    <div *ngIf="evaluatedCount <= 0">
+      <ion-text class="ion-text-align-center">There is no history to display here.</ion-text>
+    </div>
+  </div>
+</ion-content>

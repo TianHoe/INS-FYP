@@ -1,0 +1,29 @@
+<app-topnav></app-topnav>
+
+<ion-content class="ion-padding">
+  <ion-title class="pl-0 font-weight-bold">Profile</ion-title>
+
+  <div class="profile-container d-flex flex-column align-items-center">
+    <p class="user-name">{{ userDetails.name }}</p>
+  </div>
+
+  <div class="profile-details">
+    <div class="user-hp-num d-flex mb-3">
+      <div>
+        <ion-icon name="call-sharp" class="mr-3" color="info"></ion-icon>
+      </div>
+      <div class="align-self-start">{{ userDetails.contactNumber }}</div>
+    </div>
+
+    <div class="user-email d-flex mb-3">
+      <div>
+        <ion-icon name="mail-sharp" class="mr-3" color="info"></ion-icon>
+      </div>
+      <div class="align-self-start">{{ userDetails.email }}</div>
+    </div>
+
+    <div class="edit-profile-button">
+      <ion-button fill="outline" expand="block" routerLink="/profile/edit">Edit profile</ion-button>
+    </div>
+  </div>
+</ion-content>
