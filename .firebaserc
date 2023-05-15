@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ai-fyp-80ea3": {
+      "hosting": {
+        "app": [
+          "ai-fyp-80ea3"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ai-fyp-80ea3"
+  }
+}

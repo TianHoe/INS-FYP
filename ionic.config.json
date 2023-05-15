@@ -1,0 +1,7 @@
+{
+  "name": "test-fyp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
