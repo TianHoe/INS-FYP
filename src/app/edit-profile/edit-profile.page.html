@@ -3,26 +3,25 @@
 <ion-content class="ion-padding">
   <ion-title class="pl-0 font-weight-bold">Edit Profile</ion-title>
 
-  <form class="edit-profile-container">
-    <div class="d-flex flex-column align-items-center">
-      <img class="rounded-circle pb-3 profile-pic" src="https://icons.veryicon.com/png/o/miscellaneous/xinjiang-tourism/user-169.png">
-      <p class="user-name mb-0">{{ userDetails.name }}</p>
-      <p class="user-id">{{ userDetails.eventID }}</p>
-    </div>    
+  <form class="edit-profile-container" #profileForm="ngForm" (ngSubmit)="updateProfile()" *ngIf="currentJudge">
+    <ion-item>
+      <ion-label position="stacked">Name</ion-label>
+      <ion-input value="{{ currentJudge.name }}" disabled="true"></ion-input>
+    </ion-item>  
 
     <div class="profile-details">
       <ion-item>
         <ion-label position="stacked">Contact number</ion-label>
-        <ion-input value="{{ userDetails.contactNumber }}"></ion-input>
+        <ion-input [(ngModel)]="judge.contactnum" name="contactnum" value="{{ currentJudge.contactnum }}" required></ion-input>
       </ion-item>
-
+      
       <ion-item>
         <ion-label position="stacked">Email address</ion-label>
-        <ion-input value="{{ userDetails.email }}"></ion-input>
+        <ion-input [(ngModel)]="judge.email" name="email" value="{{ currentJudge.email }}" required></ion-input>
       </ion-item>
 
       <div class="save-profile-button mt-3">
-        <ion-button expand="block" routerLink="/profile" color="success">Save changes</ion-button>
+        <ion-button expand="block" type="submit" [disabled]="!profileForm.valid" color="success">Save changes</ion-button>
       </div>
 
       <div class="cancel-button mt-3">

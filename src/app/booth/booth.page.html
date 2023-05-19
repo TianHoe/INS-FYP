@@ -4,28 +4,30 @@
   <ion-searchbar (ionChange)="handleChange($event)"></ion-searchbar>
 
   <ion-card 
-    *ngFor="let booth of results" 
-    [color]="booth.availability === true ? 'available' : booth.availability === false ? 'busy' : 'light'">
+    *ngFor="let booth of booths"
+    [color]="booth.available ? 'available' : (!booth.available ? 'busy' : 'light')">
     <ion-card-header>
       <div class="d-flex justify-content-between">
-        <ion-card-title class="font-weight-bold">{{ booth.title }}</ion-card-title>
-        <ion-icon *ngIf="booth.evaluated" name="checkmark-circle-sharp">true</ion-icon>
+        <ion-card-title class="font-weight-bold">{{ booth.name }}</ion-card-title>
+        <!-- <ion-icon *ngIf="booth.evaluated" name="checkmark-circle-sharp">true</ion-icon> -->
       </div>
-      <ion-card-subtitle>{{ booth.members }} {{ booth.evaluated }}</ion-card-subtitle>
+      <ion-card-subtitle>{{ booth.members }} 
+        <!-- {{ booth.evaluated }} -->
+      </ion-card-subtitle>
     </ion-card-header>
   
     <ion-card-content>
       <a 
-        *ngIf="booth.availability === false"
+        *ngIf=!booth.available
         [ngStyle]="{
           'pointer-events': 'none',
           'color': 'gray' }"
-        [attr.aria-disabled]="!booth.availability"
+        [attr.aria-disabled]="true"
         tabindex="-1">
         Not available at the moment
       </a>
-      <a 
-        *ngIf="booth.availability === true && booth.evaluated === false"
+      <!-- <a 
+        *ngIf="booth.available && !booth.evaluated"
         [routerLink]="['/booth', booth.id]" 
         [ngStyle]="{
           'pointer-events': null,
@@ -33,15 +35,16 @@
         [attr.aria-disabled]="!booth.availability"
         tabindex="0">
         Start evaluate >>
-      </a>
+      </a> -->
+      <!-- VIEW HISTORY MOVE TO WHEN USER CLICK INTO THE BOOTH
       <a 
-        *ngIf="booth.availability && booth.evaluated === true"
+        *ngIf="booth.available && booth.evaluated"
         [routerLink]="['/history']" 
         [ngStyle]="{ 'color': 'default' }"
         [attr.aria-disabled]="!booth.availability"
         tabindex="0">
         View history
-      </a>
+      </a> -->
     </ion-card-content>
   </ion-card>
 </ion-content>
