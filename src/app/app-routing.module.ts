@@ -51,7 +51,11 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login-page/login-page.module').then( m => m.LoginPagePageModule)
-  }
+  },
+  {
+    path: 'navigate',
+    loadChildren: () => import('./maps/maps.module').then( m => m.MapsPageModule)
+  },
 ];
 
 @NgModule({
