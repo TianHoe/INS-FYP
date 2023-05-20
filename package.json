@@ -27,6 +27,7 @@
     "@capacitor/status-bar": "4.1.1",
     "@ionic/angular": "^6.1.9",
     "@sweetalert2/ngx-sweetalert2": "^12.1.0",
+    "bootstrap": "^5.2.3",
     "fabric": "^5.3.0",
     "firebase": "^9.19.1",
     "ionicons": "^6.1.3",
