@@ -1,50 +1,49 @@
 <app-topnav></app-topnav>
 
 <ion-content class="ion-padding">
-  <ion-searchbar (ionChange)="handleChange($event)"></ion-searchbar>
-
-  <ion-card 
-    *ngFor="let booth of booths"
-    [color]="booth.available ? 'available' : (!booth.available ? 'busy' : 'light')">
-    <ion-card-header>
-      <div class="d-flex justify-content-between">
-        <ion-card-title class="font-weight-bold">{{ booth.name }}</ion-card-title>
-        <!-- <ion-icon *ngIf="booth.evaluated" name="checkmark-circle-sharp">true</ion-icon> -->
-      </div>
-      <ion-card-subtitle>{{ booth.members }} 
-        <!-- {{ booth.evaluated }} -->
-      </ion-card-subtitle>
-    </ion-card-header>
-  
-    <ion-card-content>
-      <a 
-        *ngIf=!booth.available
-        [ngStyle]="{
-          'pointer-events': 'none',
-          'color': 'gray' }"
-        [attr.aria-disabled]="true"
-        tabindex="-1">
-        Not available at the moment
-      </a>
-      <!-- <a 
-        *ngIf="booth.available && !booth.evaluated"
-        [routerLink]="['/booth', booth.id]" 
-        [ngStyle]="{
-          'pointer-events': null,
-          'color': 'default' }"
-        [attr.aria-disabled]="!booth.availability"
-        tabindex="0">
-        Start evaluate >>
-      </a> -->
-      <!-- VIEW HISTORY MOVE TO WHEN USER CLICK INTO THE BOOTH
-      <a 
-        *ngIf="booth.available && booth.evaluated"
-        [routerLink]="['/history']" 
-        [ngStyle]="{ 'color': 'default' }"
-        [attr.aria-disabled]="!booth.availability"
-        tabindex="0">
-        View history
-      </a> -->
-    </ion-card-content>
-  </ion-card>
+  <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
+    <ion-card 
+      *ngIf="judgeBooth.judge_id === currentJudge.id"
+      [color]="judgeBooth.booth.available ? 'available' : 'busy'"
+      [routerLink]="['/booth', judgeBooth.booth.id]">
+      <ion-card-header>
+        <div class="d-flex justify-content-between">
+          <ion-card-title class="fw-bold">{{ judgeBooth.booth.name }}</ion-card-title>
+          <ion-icon *ngIf="judgeBooth.evaluated" name="checkmark-circle-sharp">true</ion-icon>
+          <ion-icon *ngIf="!judgeBooth.evaluated" name="alert-circle-sharp">false</ion-icon>
+        </div>
+        <ion-card-subtitle>{{ judgeBooth.booth.members }}</ion-card-subtitle>
+      </ion-card-header>
+    
+      <!-- <ion-card-content>
+        <a 
+          *ngIf="!judgeBooth.booth.available"
+          [ngStyle]="{
+            'pointer-events': 'none',
+            'color': 'gray' }"
+          [attr.aria-disabled]="true"
+          tabindex="-1">
+          Not available at the moment
+        </a>
+        <a 
+          *ngIf="judgeBooth.booth.available && !judgeBooth.evaluated"
+          [routerLink]="['/booth', judgeBooth.booth.id]" 
+          [ngStyle]="{
+            'pointer-events': null,
+            'color': 'default' }"
+          [attr.aria-disabled]="!judgeBooth.booth.available"
+          tabindex="0">
+          Start evaluate >>
+        </a>
+        <a 
+          *ngIf="judgeBooth.booth.available && judgeBooth.evaluated"
+          [routerLink]="['/history']" 
+          [ngStyle]="{ 'color': 'default' }"
+          [attr.aria-disabled]="!judgeBooth.booth.available"
+          tabindex="0">
+          View history
+        </a>
+      </ion-card-content> -->
+    </ion-card>
+  </div>
 </ion-content>

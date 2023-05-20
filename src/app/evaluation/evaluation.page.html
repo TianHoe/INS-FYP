@@ -3,7 +3,7 @@
 <ion-content class="ion-padding">
   <div *ngFor="let booth of boothList">
     <div *ngIf="booth.id === specificBooth">
-      <h2 class="p-0 font-weight-bold">{{ booth.title }}</h2>
+      <h2 class="p-0 fw-bold">{{ booth.title }}</h2>
       <ion-text class="mb-3">{{ booth.members }}</ion-text>
 
       <form [formGroup]="evaluationForm" (ngSubmit)="submitForm()" class="evaluation-form mt-3">

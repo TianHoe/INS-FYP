@@ -1,6 +1,9 @@
 <body>
-    <div class="Header p-3" color="toolbar">
-        <h4 class="HeaderText me-3">Pathfinder</h4>
+    <div class="Header p-3 d-flex align-items-center" color="toolbar">
+        <ion-buttons slot="start" class="d-inline-block">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <h4 class="HeaderText me-3 my-0">Pathfinder</h4>
         <button (click)="dijkstraSearch_A_star_variation()" class="btn myAlgorithm text-wrap lh-1 me-3" [disabled]="disableButtons">Dijkstra's Algorithm</button>
         <button (click)="bfs_Search()" class="btn myAlgorithm text-wrap lh-1 me-3" [disabled]="disableButtons">BFS Algorithm</button>
         <button (click)="a_star_search()" class="btn myAlgorithm text-wrap lh-1 me-3" [disabled]="disableButtons"> A* Algorithm</button>

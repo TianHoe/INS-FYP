@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
+import { DataService, Booth } from '../services/data.service';
 
 @Component({
   selector: 'app-booth-details',
@@ -7,7 +8,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./booth-details.page.scss'],
 })
 export class BoothDetailsPage implements OnInit {
-  public specificBooth!: number;
+  booths!: Booth[];
+  public specificBooth!: string;
 
   public boothList = [
     { id: 6, title: 'INS 6', 
@@ -42,10 +44,14 @@ export class BoothDetailsPage implements OnInit {
       availability: undefined },
   ];
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor(private activatedRoute: ActivatedRoute, private dataService: DataService) { }
 
   ngOnInit() {
-    this.specificBooth = parseInt(this.activatedRoute.snapshot.paramMap.get('id') as string, 10);
+    this.dataService.getBooth().subscribe(booths => {
+      this.booths = booths;
+    });
+
+    this.specificBooth = this.activatedRoute.snapshot.paramMap.get('id') as string;
   }
 
 }

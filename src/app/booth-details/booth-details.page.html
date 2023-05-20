@@ -1,22 +1,28 @@
 <app-topnav-backbtn></app-topnav-backbtn>
 
 <ion-content class="ion-padding">
-  <div *ngFor="let booth of boothList">
+  <div *ngFor="let booth of booths">
     <div *ngIf="booth.id === specificBooth">
-      <h2 class="p-0 font-weight-bold">{{ booth.title }}</h2>
-      <ion-text>{{ booth.members }}</ion-text>
+      <h2 class="p-0 fw-bold">{{ booth.name }}</h2>
 
       <div class="booth-details mt-3">
+        <div class="booth-member d-flex mb-3">
+          <div>
+            <ion-icon name="people-sharp" class="me-3" color="info"></ion-icon>
+          </div>
+          <div class="align-self-start">{{ booth.members }}</div>
+        </div>
+
         <div class="booth-description d-flex mb-3">
           <div>
-            <ion-icon name="document-text-sharp" class="mr-3" color="info"></ion-icon>
+            <ion-icon name="document-text-sharp" class="me-3" color="info"></ion-icon>
           </div>
           <div class="align-self-start">{{ booth.description }}</div>
         </div>
     
         <div class="booth-location d-flex mb-3">
           <div>
-            <ion-icon name="location-sharp" class="mr-3" color="info"></ion-icon>
+            <ion-icon name="location-sharp" class="me-3" color="info"></ion-icon>
           </div>
           <div class="align-self-start">{{ booth.location }}</div>
         </div>

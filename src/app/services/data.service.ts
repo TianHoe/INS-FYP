@@ -28,6 +28,18 @@ export interface Booth {
   event_id: string;
   description: string;
   available: boolean;
+  location: string;
+}
+
+export interface JudgeBooth {
+  id?: string;
+  booth_id: string;
+  judge_id: string;
+  evaluated: boolean;
+}
+
+export interface JudgeBoothWithBooth extends JudgeBooth {
+  booth: Booth | null;
 }
 
 @Injectable({
@@ -83,5 +95,21 @@ export class DataService {
   getBoothById(id: any): Observable<Booth[]> {
     const boothDocRef = doc(this.firestore, `booth/${id}`);
     return docData(boothDocRef, { idField: 'id' }) as Observable<Booth[]>;
+  }
+
+  // JUDGE-BOOTH
+  getJudgeBooth(): Observable<JudgeBooth[]> {
+    const judgeBoothRef = collection(this.firestore, 'judge_booth');
+    return collectionData(judgeBoothRef, { idField: 'id' }) as Observable<JudgeBooth[]>;
+  }
+
+  combineData(judgeBooths: JudgeBooth[], booths: Booth[]): JudgeBoothWithBooth[] {
+    return judgeBooths.map((judgeBooth) => {
+      const booth = booths.find((b) => b.id === judgeBooth.booth_id);
+      return {
+        ...judgeBooth,
+        booth: booth ? booth : null,
+      };
+    });
   }
 }

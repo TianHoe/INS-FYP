@@ -1,55 +1,42 @@
 <app-topnav></app-topnav>
 
 <ion-content class="ion-padding">
-
-  <!--
-    <ion-button (click)="presentActionSheet()">
-      Click me!
-    </ion-button> 
-  -->
-
   <div class="event-details" *ngFor="let event of events">
     <div class="homepage-container d-flex flex-column align-items-center pb-3">
       <img class="event-img" src="{{ event.event_img }}">
     </div>
 
-    <ion-title class="pl-0 pb-3 font-weight-bold">{{ event.name }}</ion-title>
+    <ion-title class="ps-0 pb-3 fw-bold">{{ event.name }}</ion-title>
 
     <div class="event-desc d-flex mb-3">
-      <div><ion-icon name="document-text-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="document-text-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">{{ event.description }}</div>
     </div>
 
     <div class="event-location d-flex mb-3">
-      <div><ion-icon name="location-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="location-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">{{ event.venue }}</div>
     </div>
 
     <div class="event-date d-flex mb-3">
-      <div><ion-icon name="today-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="today-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">
         {{ event.start_time.toDate() | date:'dd MMM yyyy' }} - {{ event.end_time.toDate() | date:'dd MMM yyyy' }}
       </div>
     </div>
 
     <div class="event-time d-flex mb-3">
-      <div><ion-icon name="time-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="time-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">
         {{ event.start_time.toDate() | date:'h:mm a' }} - {{ event.end_time.toDate() | date:'h:mm a' }}
       </div>
     </div>
 
     <div class="event-booth-num d-flex">
-      <div><ion-icon name="footsteps-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="footsteps-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">
         Total booth: 6
       </div>
     </div>
-
-    <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="addJudge()">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab> -->
   </div>
 </ion-content>

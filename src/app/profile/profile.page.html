@@ -1,20 +1,20 @@
 <app-topnav></app-topnav>
 
 <ion-content class="ion-padding">
-  <ion-title class="pl-0 mb-3 font-weight-bold">Profile</ion-title>
+  <ion-title class="pl-0 mb-3 fw-bold">Profile</ion-title>
   <div class="profile-details" *ngIf="currentJudge">
     <div class="user-name d-flex mb-3">
-      <div><ion-icon name="person-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="person-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">{{ currentJudge.name }}</div>
     </div>
 
     <div class="user-hp-num d-flex mb-3">
-      <div><ion-icon name="call-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="call-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">{{ currentJudge.contactnum }}</div>
     </div>
 
     <div class="user-email d-flex mb-3">
-      <div><ion-icon name="mail-sharp" class="mr-3" color="info"></ion-icon></div>
+      <div><ion-icon name="mail-sharp" class="me-3" color="info"></ion-icon></div>
       <div class="align-self-start">{{ currentJudge.email }}</div>
     </div>
 
