@@ -38,18 +38,17 @@ export class EvaluationPage implements OnInit {
 
     this.dataService.getCriteria().subscribe(criteria => {
       this.criterias = criteria;
+
+      this.evaluationForm = this.formBuilder.group({});
+
+      this.criterias.forEach((criteria, i) => {
+        this.evaluationForm.addControl(`score${i}`, this.formBuilder.control('', Validators.required));
+      });
+    
+      this.evaluationForm.addControl('comment', this.formBuilder.control(''));
     });
 
     this.specificBooth = this.activatedRoute.snapshot.paramMap.get('id') as string;
-
-    this.evaluationForm = this.formBuilder.group({
-      score0: ['', [Validators.required]],
-      score1: ['', [Validators.required]],
-      score2: ['', [Validators.required]],
-      score3: ['', [Validators.required]],
-      score4: ['', [Validators.required]],
-      comment: ['']
-    })
   }
 
   range(start: number, end: number): number[] {

@@ -4,7 +4,7 @@
   <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
     <div *ngIf="judgeBooth.booth.id === specificBooth">
       <h2 class="p-0 fw-bold">{{ judgeBooth.booth.name }}</h2>
-      <ion-text class="mb-3">{{ judgeBooth.booth.members }}</ion-text>
+      <ion-text class="mb-3">Member(s): {{ judgeBooth.booth.members }}</ion-text>
 
       <form [formGroup]="evaluationForm" (ngSubmit)="submitForm()" class="evaluation-form mt-3">
         <ion-list lines="none" class="mb-2">
@@ -12,13 +12,13 @@
             <ion-label>
               {{ criteria.name }}
             </ion-label>
-            <ion-select interface="popover" placeholder="Give a score" formControlName="score{{ i }}">
+            <ion-select interface="popover" placeholder="Give a score" [formControlName]="'score' + i">
               <ion-select-option *ngFor="let num of range(0, criteria.max_score)" value="{{ num }}">{{ num }}</ion-select-option>
             </ion-select>
             <!-- Error messages -->
-            <span class="text-danger" *ngIf="isSubmitted && evaluationForm.get('score{{ i }}')?.errors?.['required']">
-              Please give a score
-            </span>
+            <div class="d-flex text-danger" *ngIf="isSubmitted && evaluationForm.get('score' + i)?.errors?.['required']">
+              <ion-icon name="alert-circle-sharp"></ion-icon>
+            </div>
           </ion-item>
           
           <ion-item lines="full" shape="round">
