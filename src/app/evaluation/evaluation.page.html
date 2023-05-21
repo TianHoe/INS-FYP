@@ -1,10 +1,10 @@
 <app-topnav-backbtn></app-topnav-backbtn>
 
 <ion-content class="ion-padding">
-  <div *ngFor="let booth of boothList">
-    <div *ngIf="booth.id === specificBooth">
-      <h2 class="p-0 fw-bold">{{ booth.title }}</h2>
-      <ion-text class="mb-3">{{ booth.members }}</ion-text>
+  <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
+    <div *ngIf="judgeBooth.booth.id === specificBooth">
+      <h2 class="p-0 fw-bold">{{ judgeBooth.booth.name }}</h2>
+      <ion-text class="mb-3">{{ judgeBooth.booth.members }}</ion-text>
 
       <form [formGroup]="evaluationForm" (ngSubmit)="submitForm()" class="evaluation-form mt-3">
         <ion-list lines="none" class="mb-2">
@@ -13,7 +13,7 @@
               {{ criteria }}
             </ion-label>
             <ion-select interface="popover" placeholder="Give a score" formControlName="score{{ i }}">
-              <ion-select-option *ngFor="let num of [0,1,2,3,4,5]" value="{{ num }}">{{ num }}</ion-select-option>
+              <ion-select-option *ngFor="let num of range(0, criteria.max_score)" value="{{ num }}">{{ num }}</ion-select-option>
             </ion-select>
             <!-- Error messages -->
             <span class="text-danger" *ngIf="isSubmitted && evaluationForm.get('score{{ i }}')?.errors?.['required']">
@@ -29,7 +29,7 @@
 
         <div class="evaluation-form-buttons d-flex ion-float-right">
           <ion-button class="evaluation-submit-button pr-2" type="submit" color="success">Submit</ion-button>
-          <ion-button class="evaluation-cancel-button" routerLink="/booth/{{ booth.id }}" color="danger">Cancel</ion-button>
+          <ion-button class="evaluation-cancel-button" routerLink="/booth/{{ judgeBooth.booth.id }}" color="danger">Cancel</ion-button>
         </div>
       </form>
     </div>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { DataService, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria } from '../services/data.service';
 
 @Component({
   selector: 'app-evaluation',
@@ -9,56 +10,37 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 
 export class EvaluationPage implements OnInit {
-  public specificBooth!: number;
-
-  public boothList = [
-    { id: 6, title: 'INS 6', 
-      members: 'This is the sixth card', 
-      description: 'Sixth description here', 
-      location: 'Lot 1-6',
-      availability: undefined },
-    { id: 3, title: 'INS 3', 
-      members: 'This is the third card', 
-      description: 'Third description here', 
-      location: 'Lot 1-3',
-      availability: false },
-    { id: 1, title: 'INS 1', 
-      members: 'This is the first card', 
-      description: 'First description here', 
-      location: 'Lot 1-1',
-      availability: true },
-    { id: 4, title: 'INS 4', 
-      members: 'This is the fourth card', 
-      description: 'Fourth description here', 
-      location: 'Lot 1-4',
-      availability: false },
-    { id: 2, title: 'INS 2', 
-      members: 'This is the second card', 
-      description: 'Second description here', 
-      location: 'Lot 1-2',
-      availability: true },
-    { id: 5, title: 'INS 5', 
-      members: 'This is the fifth card', 
-      description: 'Fifth description here', 
-      location: 'Lot 1-5',
-      availability: undefined },
-  ];
-
-  public criterias = [
-    'Originality', 
-    'Marketing value',
-    'Team capability',
-    'Impact of the product',
-    'Presetation Skill'
-  ];
+  public specificBooth!: string;  
+  booths!: Booth[];
+  criterias!: Criteria[];
+  judgeBooth!: JudgeBooth[];
+  judgeBoothsWithBooths!: JudgeBoothWithBooth[];
 
   evaluationForm!: FormGroup;
   isSubmitted = false;
 
-  constructor(private activatedRoute: ActivatedRoute, public formBuilder: FormBuilder) { }
+  constructor(private activatedRoute: ActivatedRoute, public formBuilder: FormBuilder, private dataService: DataService) { }
 
   ngOnInit() {
-    this.specificBooth = parseInt(this.activatedRoute.snapshot.paramMap.get('id') as string, 10);
+    this.dataService.getBooth().subscribe(booths => {
+      this.booths = booths;
+    });
+
+    this.dataService.getJudgeBooth().subscribe(judgebooth => {
+      this.judgeBooth = judgebooth;
+    });
+
+    this.dataService.getJudgeBooth().subscribe((judgeBooths: JudgeBooth[]) => {
+      this.dataService.getBooth().subscribe((booths: Booth[]) => {
+        this.judgeBoothsWithBooths = this.dataService.combineData(judgeBooths, booths);
+      });
+    });
+
+    this.dataService.getCriteria().subscribe(criteria => {
+      this.criterias = criteria;
+    });
+
+    this.specificBooth = this.activatedRoute.snapshot.paramMap.get('id') as string;
 
     this.evaluationForm = this.formBuilder.group({
       score0: ['', [Validators.required]],

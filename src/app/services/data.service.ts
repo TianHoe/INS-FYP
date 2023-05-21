@@ -42,6 +42,12 @@ export interface JudgeBoothWithBooth extends JudgeBooth {
   booth: Booth | null;
 }
 
+export interface Criteria {
+  id?: string;
+  max_score: number;
+  name: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -111,5 +117,11 @@ export class DataService {
         booth: booth ? booth : null,
       };
     });
+  }
+
+  // CRITERIA
+  getCriteria(): Observable<Criteria[]> {
+    const criteriaRef = collection(this.firestore, 'criteria');
+    return collectionData(criteriaRef, { idField: 'id' }) as Observable<Criteria[]>;
   }
 }
