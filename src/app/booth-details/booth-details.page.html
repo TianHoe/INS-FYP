@@ -1,38 +1,46 @@
 <app-topnav-backbtn></app-topnav-backbtn>
 
 <ion-content class="ion-padding">
-  <div *ngFor="let booth of booths">
-    <div *ngIf="booth.id === specificBooth">
-      <h2 class="p-0 fw-bold">{{ booth.name }}</h2>
+  <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
+    <div *ngIf="judgeBooth.booth.id === specificBooth">
+      <h2 class="p-0 fw-bold">{{ judgeBooth.booth.name }}</h2>
 
       <div class="booth-details mt-3">
         <div class="booth-member d-flex mb-3">
           <div>
             <ion-icon name="people-sharp" class="me-3" color="info"></ion-icon>
           </div>
-          <div class="align-self-start">{{ booth.members }}</div>
+          <div class="align-self-start">{{ judgeBooth.booth.members }}</div>
         </div>
 
         <div class="booth-description d-flex mb-3">
           <div>
             <ion-icon name="document-text-sharp" class="me-3" color="info"></ion-icon>
           </div>
-          <div class="align-self-start">{{ booth.description }}</div>
+          <div class="align-self-start">{{ judgeBooth.booth.description }}</div>
         </div>
     
         <div class="booth-location d-flex mb-3">
           <div>
             <ion-icon name="location-sharp" class="me-3" color="info"></ion-icon>
           </div>
-          <div class="align-self-start">{{ booth.location }}</div>
+          <div class="align-self-start">{{ judgeBooth.booth.location }}</div>
         </div>
     
-        <div class="booth-check-in-button mt-3">
-          <ion-button fill="outline" expand="block" routerLink="/booth/{{ booth.id }}">Check in</ion-button>
+        <div class="pending-buttons" *ngIf="!judgeBooth.evaluated && judgeBooth.booth.available">
+          <div class="booth-check-in-button mt-3">
+            <ion-button fill="outline" expand="block" routerLink="/booth/{{ judgeBooth.booth.id }}">Check in</ion-button>
+          </div>
+  
+          <div class="booth-evaluate-button mt-3">
+            <ion-button fill="outline" expand="block" routerLink="/booth/evaluate/{{ judgeBooth.booth.id }}">Start evaluate</ion-button>
+          </div>
         </div>
 
-        <div class="booth-evaluate-button mt-3">
-          <ion-button fill="outline" expand="block" routerLink="/booth/evaluate/{{ booth.id }}">Start evaluate</ion-button>
+        <div class="evaluated-button" *ngIf="judgeBooth.evaluated">
+          <div class="history-button mt-3">
+            <ion-button fill="outline" expand="block" routerLink="/history">Evaluation History</ion-button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,16 +1,28 @@
 <app-topnav></app-topnav>
 
 <ion-content class="ion-padding">
+  <div class="d-flex">
+    <div class="d-flex me-2">
+      <ion-icon name="checkmark-circle-sharp" class="me-2"></ion-icon>
+      <ion-text>Evaluated</ion-text>
+    </div>
+    <div class="d-flex me-2">
+      <ion-icon name="alert-circle-sharp" class="me-2"></ion-icon>
+      <ion-text>Pending evaluation</ion-text>
+    </div>
+  </div>
   <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
-    <ion-card 
+    <ion-card class="mx-0"
       *ngIf="judgeBooth.judge_id === currentJudge.id"
       [color]="judgeBooth.booth.available ? 'available' : 'busy'"
       [routerLink]="['/booth', judgeBooth.booth.id]">
       <ion-card-header>
         <div class="d-flex justify-content-between">
           <ion-card-title class="fw-bold">{{ judgeBooth.booth.name }}</ion-card-title>
-          <ion-icon *ngIf="judgeBooth.evaluated" name="checkmark-circle-sharp">true</ion-icon>
-          <ion-icon *ngIf="!judgeBooth.evaluated" name="alert-circle-sharp">false</ion-icon>
+          <div>
+            <ion-icon *ngIf="judgeBooth.evaluated" name="checkmark-circle-sharp"></ion-icon>
+            <ion-icon *ngIf="!judgeBooth.evaluated" name="alert-circle-sharp"></ion-icon>
+          </div>
         </div>
         <ion-card-subtitle>{{ judgeBooth.booth.members }}</ion-card-subtitle>
       </ion-card-header>
