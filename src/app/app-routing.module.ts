@@ -9,11 +9,6 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'folder/:id',
-    loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'profile',
     loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule),
     canActivate: [AuthGuard]
@@ -51,7 +46,11 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login-page/login-page.module').then( m => m.LoginPagePageModule)
-  }
+  },
+  {
+    path: 'navigate',
+    loadChildren: () => import('./maps/maps.module').then( m => m.MapsPageModule)
+  },
 ];
 
 @NgModule({

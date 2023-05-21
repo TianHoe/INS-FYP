@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
-import { DataService } from '../services/data.service';
+import { DataService, Event } from '../services/data.service';
 import { getAuth } from 'firebase/auth';
 
 @Component({
@@ -10,6 +10,7 @@ import { getAuth } from 'firebase/auth';
 })
 export class HomepagePage implements OnInit {
   j:any[] = [];
+  events!: Event[];
   auth = getAuth();
 
   constructor(private actionSheet: ActionSheetController, 
@@ -75,6 +76,9 @@ export class HomepagePage implements OnInit {
   }
 
   ngOnInit() {
+    this.dataService.getEvent().subscribe(events => {
+      this.events = events;
+    });
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService, Booth } from '../services/data.service';
 
 @Component({
   selector: 'app-booth',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./booth.page.scss'],
 })
 export class BoothPage implements OnInit {
+  booths!: Booth[];
+
   public boothList = [
     { id: 6, title: 'INS 6', 
       members: 'This is the sixth card', 
@@ -49,9 +52,13 @@ export class BoothPage implements OnInit {
 
   public results = [...this.sortedBoothList];
 
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.dataService.getBooth().subscribe(booths => {
+      this.booths = booths;
+    });
+  }
 
   handleChange(event: any) {
     const query = event.target.value.toLowerCase();
