@@ -10,7 +10,7 @@
         <ion-list lines="none" class="mb-2">
           <ion-item *ngFor="let criteria of criterias; let i = index" class="mb-2">
             <ion-label>
-              {{ criteria }}
+              {{ criteria.name }}
             </ion-label>
             <ion-select interface="popover" placeholder="Give a score" formControlName="score{{ i }}">
               <ion-select-option *ngFor="let num of range(0, criteria.max_score)" value="{{ num }}">{{ num }}</ion-select-option>

@@ -52,6 +52,10 @@ export class EvaluationPage implements OnInit {
     })
   }
 
+  range(start: number, end: number): number[] {
+    return Array(end - start + 1).fill(0).map((_, idx) => start + idx);
+  }
+
   submitForm() {
     this.isSubmitted = true;
     if (!this.evaluationForm.valid) {
@@ -62,5 +66,4 @@ export class EvaluationPage implements OnInit {
       return true
     }
   }
-
 }
