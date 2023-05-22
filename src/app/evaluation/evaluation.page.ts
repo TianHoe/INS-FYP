@@ -99,8 +99,10 @@ export class EvaluationPage implements OnInit {
       // Reset the form after submitting
       this.evaluationForm.reset();
       this.router.navigate(['/booth']);
+      return true;
     } else {
       console.log('Please provide all the required values!')
+      return false;
     }
   }
 }
