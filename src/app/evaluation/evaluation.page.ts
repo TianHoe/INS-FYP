@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria, Scoring } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-evaluation',
@@ -26,7 +27,8 @@ export class EvaluationPage implements OnInit {
     public formBuilder: FormBuilder, 
     private dataService: DataService, 
     private authService: AuthService,
-    private router: Router) {
+    private router: Router,
+    private toastController: ToastController) {
       this.currentUserId = authService.getUID()!;
 
     this.dataService.getJudgeByAuthId(this.currentUserId).subscribe(judge => {
@@ -68,6 +70,16 @@ export class EvaluationPage implements OnInit {
     return Array(end - start + 1).fill(0).map((_, idx) => start + idx);
   }
 
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Please provide all the required values!',
+      duration: 1500,
+      icon: 'close-circle',
+    });
+
+    await toast.present();
+  }
+
   submitForm() {
     this.isSubmitted = true;
     if (this.evaluationForm.valid) {
@@ -102,6 +114,7 @@ export class EvaluationPage implements OnInit {
       return true;
     } else {
       console.log('Please provide all the required values!')
+      this.presentToast();
       return false;
     }
   }
