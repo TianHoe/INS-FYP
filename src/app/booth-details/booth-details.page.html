@@ -20,7 +20,7 @@
           <div class="align-self-start">{{ judgeBooth.booth.description }}</div>
         </div>
     
-        <div class="booth-location d-flex mb-3">
+        <div class="booth-location d-flex mb-3" *ngIf="judgeBooth.booth.available || judgeBooth.evaluated">
           <div>
             <ion-icon name="location-sharp" class="me-3" color="info"></ion-icon>
           </div>
