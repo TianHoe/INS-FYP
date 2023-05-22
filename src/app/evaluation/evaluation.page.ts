@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria, Scoring } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 import { ToastController } from '@ionic/angular';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-evaluation',
@@ -111,6 +112,13 @@ export class EvaluationPage implements OnInit {
       // Reset the form after submitting
       this.evaluationForm.reset();
       this.router.navigate(['/booth']);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Scoring submitted',
+        text: 'Your evaluation has been submitted successfully!',
+        heightAuto: false,
+      });
       return true;
     } else {
       console.log('Please provide all the required values!')
