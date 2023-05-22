@@ -26,36 +26,6 @@
         </div>
         <ion-card-subtitle>{{ judgeBooth.booth.members }}</ion-card-subtitle>
       </ion-card-header>
-    
-      <!-- <ion-card-content>
-        <a 
-          *ngIf="!judgeBooth.booth.available"
-          [ngStyle]="{
-            'pointer-events': 'none',
-            'color': 'gray' }"
-          [attr.aria-disabled]="true"
-          tabindex="-1">
-          Not available at the moment
-        </a>
-        <a 
-          *ngIf="judgeBooth.booth.available && !judgeBooth.evaluated"
-          [routerLink]="['/booth', judgeBooth.booth.id]" 
-          [ngStyle]="{
-            'pointer-events': null,
-            'color': 'default' }"
-          [attr.aria-disabled]="!judgeBooth.booth.available"
-          tabindex="0">
-          Start evaluate >>
-        </a>
-        <a 
-          *ngIf="judgeBooth.booth.available && judgeBooth.evaluated"
-          [routerLink]="['/history']" 
-          [ngStyle]="{ 'color': 'default' }"
-          [attr.aria-disabled]="!judgeBooth.booth.available"
-          tabindex="0">
-          View history
-        </a>
-      </ion-card-content> -->
     </ion-card>
   </div>
 </ion-content>

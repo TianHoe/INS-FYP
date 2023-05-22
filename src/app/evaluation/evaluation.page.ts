@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { DataService, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria } from '../services/data.service';
+import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria, Scoring } from '../services/data.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-evaluation',
@@ -10,7 +11,9 @@ import { DataService, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria } from '.
 })
 
 export class EvaluationPage implements OnInit {
-  public specificBooth!: string;  
+  public specificBooth!: string;
+  currentUserId: string;
+  currentJudge!: Judge;  
   booths!: Booth[];
   criterias!: Criteria[];
   judgeBooth!: JudgeBooth[];
@@ -19,7 +22,17 @@ export class EvaluationPage implements OnInit {
   evaluationForm!: FormGroup;
   isSubmitted = false;
 
-  constructor(private activatedRoute: ActivatedRoute, public formBuilder: FormBuilder, private dataService: DataService) { }
+  constructor(private activatedRoute: ActivatedRoute, 
+    public formBuilder: FormBuilder, 
+    private dataService: DataService, 
+    private authService: AuthService,
+    private router: Router) {
+      this.currentUserId = authService.getUID()!;
+
+    this.dataService.getJudgeByAuthId(this.currentUserId).subscribe(judge => {
+      this.currentJudge = judge[0];
+    });
+  }
 
   ngOnInit() {
     this.dataService.getBooth().subscribe(booths => {
@@ -57,12 +70,37 @@ export class EvaluationPage implements OnInit {
 
   submitForm() {
     this.isSubmitted = true;
-    if (!this.evaluationForm.valid) {
-      console.log('Please provide all the required values!')
-      return false;
+    if (this.evaluationForm.valid) {
+      const formValues = this.evaluationForm.value;
+
+      // Iterate over the form values
+      Object.keys(formValues).forEach(key => {
+        if (key.startsWith('score')) {
+          const criteriaIndex = parseInt(key.substring(5));
+          const criteria = this.criterias[criteriaIndex];
+          const value = formValues[key];
+
+          // Create a new Scoring object
+          const scoring: Scoring = {
+            booth_id: this.specificBooth,
+            criteria_id: criteria.id,
+            judge_id: this.currentJudge.id,
+            value: parseInt(value)
+          };
+
+          // Call the addScoring function for each scoring value
+          this.dataService.addScoring(scoring);
+        }
+      });
+      // Update the judgeBooth and Booth object 
+      this.dataService.updateJudgeBooth(this.judgeBooth[0]);
+      this.dataService.updateBoothAvailability(this.judgeBoothsWithBooths[0].booth);
+
+      // Reset the form after submitting
+      this.evaluationForm.reset();
+      this.router.navigate(['/booth']);
     } else {
-      console.log(this.evaluationForm.value)
-      return true
+      console.log('Please provide all the required values!')
     }
   }
 }

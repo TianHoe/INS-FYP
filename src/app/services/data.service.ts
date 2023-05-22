@@ -48,6 +48,14 @@ export interface Criteria {
   name: string;
 }
 
+export interface Scoring {
+  id?: string;
+  booth_id: string;
+  criteria_id: string;
+  judge_id: string;
+  value: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -103,6 +111,13 @@ export class DataService {
     return docData(boothDocRef, { idField: 'id' }) as Observable<Booth[]>;
   }
 
+  updateBoothAvailability(booth: Booth) {
+    const BoothDocRef = doc(this.firestore, `booth/${booth.id}`);
+    return updateDoc(BoothDocRef, {
+      available: true
+    });
+  }
+
   // JUDGE-BOOTH
   getJudgeBooth(): Observable<JudgeBooth[]> {
     const judgeBoothRef = collection(this.firestore, 'judge_booth');
@@ -119,9 +134,32 @@ export class DataService {
     });
   }
 
+  getCurrentJudgeBooth(boothId: string, judgeId: string): Observable<Judge[]> {
+    const judgeBoothRef = collection(this.firestore, 'judge_booth');
+    const getQuery = query(
+      judgeBoothRef, 
+      where('booth_id', '==', boothId),
+      where('judge_id', '==', judgeId));
+    const judgeBoothDoc = collectionData(getQuery, { idField: 'id' }) as Observable<Judge[]>;
+    return judgeBoothDoc;
+  }
+
+  updateJudgeBooth(judgeBooth: JudgeBooth) {
+    const judgeBoothDocRef = doc(this.firestore, `judge_booth/${judgeBooth.id}`);
+    return updateDoc(judgeBoothDocRef, {
+      evaluated: true
+    });
+  }
+
   // CRITERIA
   getCriteria(): Observable<Criteria[]> {
     const criteriaRef = collection(this.firestore, 'criteria');
     return collectionData(criteriaRef, { idField: 'id' }) as Observable<Criteria[]>;
+  }
+
+  // SCORING
+  addScoring(score: Scoring) {
+    const scoreRef = collection(this.firestore, 'scoring');
+    return addDoc(scoreRef, score);
   }
 }
