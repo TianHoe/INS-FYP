@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria, Scoring } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 import { ToastController } from '@ionic/angular';
@@ -38,14 +38,6 @@ export class EvaluationPage implements OnInit {
   }
 
   ngOnInit() {
-    this.dataService.getBooth().subscribe(booths => {
-      this.booths = booths;
-    });
-
-    this.dataService.getJudgeBooth().subscribe(judgebooth => {
-      this.judgeBooth = judgebooth;
-    });
-
     this.dataService.getJudgeBooth().subscribe((judgeBooths: JudgeBooth[]) => {
       this.dataService.getBooth().subscribe((booths: Booth[]) => {
         this.judgeBoothsWithBooths = this.dataService.combineData(judgeBooths, booths);
@@ -54,7 +46,6 @@ export class EvaluationPage implements OnInit {
 
     this.dataService.getCriteria().subscribe(criteria => {
       this.criterias = criteria;
-
       this.evaluationForm = this.formBuilder.group({});
 
       this.criterias.forEach((criteria, i) => {
@@ -121,7 +112,6 @@ export class EvaluationPage implements OnInit {
       });
       return true;
     } else {
-      console.log('Please provide all the required values!')
       this.presentToast();
       return false;
     }

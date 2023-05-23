@@ -124,6 +124,13 @@ export class DataService {
     return collectionData(judgeBoothRef, { idField: 'id' }) as Observable<JudgeBooth[]>;
   }
 
+  getJudgeBoothByJudgeId(judgeId: string): Observable<JudgeBooth[]> {
+    const judgeBoothRef = collection(this.firestore, 'judge_booth');
+    const getQuery = query(judgeBoothRef, where('judge_id', '==', judgeId));
+    const judgeBoothDoc = collectionData(getQuery, { idField: 'id' }) as Observable<JudgeBooth[]>;
+    return judgeBoothDoc;
+  }
+
   combineData(judgeBooths: JudgeBooth[], booths: Booth[]): JudgeBoothWithBooth[] {
     return judgeBooths.map((judgeBooth) => {
       const booth = booths.find((b) => b.id === judgeBooth.booth_id);
