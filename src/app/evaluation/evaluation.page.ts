@@ -46,13 +46,6 @@ export class EvaluationPage implements OnInit {
 
     this.dataService.getCriteria().subscribe(criteria => {
       this.criterias = criteria;
-      this.evaluationForm = this.formBuilder.group({});
-
-      this.criterias.forEach((criteria, i) => {
-        this.evaluationForm.addControl(`score${i}`, this.formBuilder.control('', Validators.required));
-      });
-    
-      this.evaluationForm.addControl('comment', this.formBuilder.control(''));
     });
 
     this.specificBooth = this.activatedRoute.snapshot.paramMap.get('id') as string;
@@ -70,6 +63,11 @@ export class EvaluationPage implements OnInit {
     });
 
     await toast.present();
+  }
+
+  cancelEvaluation() {
+    this.dataService.updateBoothAvailability(this.judgeBoothsWithBooths[0].booth, true);
+    this.router.navigate(['/booth']);
   }
 
   submitForm() {
@@ -98,7 +96,7 @@ export class EvaluationPage implements OnInit {
       });
       // Update the judgeBooth and Booth object 
       this.dataService.updateJudgeBooth(this.judgeBooth[0]);
-      this.dataService.updateBoothAvailability(this.judgeBoothsWithBooths[0].booth);
+      this.dataService.updateBoothAvailability(this.judgeBoothsWithBooths[0].booth, true);
 
       // Reset the form after submitting
       this.evaluationForm.reset();

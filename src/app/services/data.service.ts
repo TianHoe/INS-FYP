@@ -106,15 +106,15 @@ export class DataService {
     return collectionData(boothRef, { idField: 'id' }) as Observable<Booth[]>;
   }
 
-  getBoothById(id: any): Observable<Booth[]> {
+  getBoothById(id: any): Observable<Booth> {
     const boothDocRef = doc(this.firestore, `booth/${id}`);
-    return docData(boothDocRef, { idField: 'id' }) as Observable<Booth[]>;
+    return docData(boothDocRef, { idField: 'id' }) as Observable<Booth>;
   }
 
-  updateBoothAvailability(booth: Booth) {
+  updateBoothAvailability(booth: Booth, availability: boolean): Promise<void> {
     const BoothDocRef = doc(this.firestore, `booth/${booth.id}`);
     return updateDoc(BoothDocRef, {
-      available: true
+      available: availability
     });
   }
 

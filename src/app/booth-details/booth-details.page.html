@@ -27,20 +27,12 @@
           <div class="align-self-start">{{ judgeBooth.booth.location }}</div>
         </div>
     
-        <div class="pending-buttons" *ngIf="!judgeBooth.evaluated && judgeBooth.booth.available">
-          <div class="booth-check-in-button mt-3">
-            <ion-button fill="outline" expand="block" routerLink="/booth/{{ judgeBooth.booth.id }}">Check in</ion-button>
-          </div>
-  
-          <div class="booth-evaluate-button mt-3">
-            <ion-button fill="outline" expand="block" routerLink="/booth/evaluate/{{ judgeBooth.booth.id }}">Start evaluate</ion-button>
-          </div>
+        <div class="booth-check-in-button mt-3" *ngIf="!judgeBooth.evaluated && judgeBooth.booth.available">
+          <ion-button fill="outline" expand="block" (click)="boothCheckIn()">Check in</ion-button>
         </div>
 
-        <div class="evaluated-button" *ngIf="judgeBooth.evaluated">
-          <div class="history-button mt-3">
-            <ion-button fill="outline" expand="block" routerLink="/history">Evaluation History</ion-button>
-          </div>
+        <div class="history-button mt-3" *ngIf="judgeBooth.evaluated">
+          <ion-button fill="outline" expand="block" routerLink="/history">Evaluation History</ion-button>
         </div>
       </div>
     </div>

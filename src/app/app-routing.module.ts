@@ -34,9 +34,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'booth/evaluate/:id',
-    loadChildren: () => import('./evaluation/evaluation.module').then( m => m.EvaluationPageModule),
-    canActivate: [AuthGuard]
+    path: 'evaluate/:id',
+    loadChildren: () => import('./evaluation/evaluation.module').then( m => m.EvaluationPageModule)
   },
   {
     path: 'history',

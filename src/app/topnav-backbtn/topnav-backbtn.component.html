@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="toolbar">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/homepage"></ion-back-button>
+      <ion-back-button defaultHref="/homepage" *ngIf="!isEvaluatePage"></ion-back-button>
     </ion-buttons>
     <div class="app-logo-container float-end p-3">
       <ion-img src="../../assets/icon/logo.png"></ion-img>
