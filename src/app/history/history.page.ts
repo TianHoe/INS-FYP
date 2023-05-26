@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth } from '../services/data.service';
+import { ModalController } from '@ionic/angular';
+import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Scoring } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -16,9 +17,9 @@ export class HistoryPage implements OnInit {
   judgeBooth!: JudgeBooth[];
   judgeBoothsWithBooths!: JudgeBoothWithBooth[];
 
-  constructor(private dataService: DataService, private authService: AuthService) {
-    
-  }
+  isModalOpen = false;
+
+  constructor(private dataService: DataService, private authService: AuthService, private modalController: ModalController) {}
 
   ngOnInit() {
     this.currentUserId = this.authService.getUID()!;
@@ -38,5 +39,9 @@ export class HistoryPage implements OnInit {
         });
       });
     });
+  }
+
+  setOpen(isOpen: boolean) {
+    this.isModalOpen = isOpen;
   }
 }

@@ -6,25 +6,25 @@
       <h2 class="p-0 fw-bold">{{ judgeBooth.booth.name }}</h2>
       <ion-text class="mb-3">Member(s): {{ judgeBooth.booth.members }}</ion-text>
 
-      <form (ngSubmit)="submitForm()" #evaluationForm="ngForm" class="evaluation-form mt-3">
+      <form [formGroup]="evaluationForm" (ngSubmit)="submitForm(judgeBooth, judgeBooth.booth)" class="evaluation-form mt-3">
         <ion-list lines="none" class="mb-2">
           <ion-item *ngFor="let criteria of criterias; let i = index" class="mb-2">
             <ion-label>
               {{ criteria.name }}
             </ion-label>
-            <ion-select interface="popover" placeholder="Give a score" name="score{{ i }}" [(ngModel)]="evaluationForm.value['score' + i]" required>
-              <ion-select-option *ngFor="let num of range(0, criteria.max_score)" [value]="num">{{ num }}</ion-select-option>
+            <ion-select interface="popover" placeholder="Give a score" [formControlName]="'score' + i">
+              <ion-select-option *ngFor="let num of range(0, criteria.max_score)" value="{{ num }}">{{ num }}</ion-select-option>
             </ion-select>
             <!-- Error messages -->
-            <span class="d-flex text-danger" *ngIf="isSubmitted && evaluationForm.controls['score' + i]?.errors?.['required']">
+            <div class="d-flex text-danger" *ngIf="isSubmitted && evaluationForm.get('score' + i)?.errors?.['required']">
               <ion-icon name="alert-circle-sharp"></ion-icon>
-            </span>
+            </div>
           </ion-item>
         </ion-list>
-      
+
         <div class="evaluation-form-buttons d-flex ion-float-right">
           <ion-button class="evaluation-submit-button pr-2" type="submit" color="success">Submit</ion-button>
-          <ion-button class="evaluation-cancel-button" (click)="cancelEvaluation()" color="danger">Cancel</ion-button>
+          <ion-button class="evaluation-cancel-button" (click)="cancelEvaluation(judgeBooth.booth)" color="danger">Cancel</ion-button>
         </div>
       </form>
     </div>

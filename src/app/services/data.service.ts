@@ -151,10 +151,10 @@ export class DataService {
     return judgeBoothDoc;
   }
 
-  updateJudgeBooth(judgeBooth: JudgeBooth) {
+  updateJudgeBooth(judgeBooth: JudgeBooth, evaluate: boolean) {
     const judgeBoothDocRef = doc(this.firestore, `judge_booth/${judgeBooth.id}`);
     return updateDoc(judgeBoothDocRef, {
-      evaluated: true
+      evaluated: evaluate
     });
   }
 
@@ -168,5 +168,12 @@ export class DataService {
   addScoring(score: Scoring) {
     const scoreRef = collection(this.firestore, 'scoring');
     return addDoc(scoreRef, score);
+  }
+
+  getBoothScoring(judgeId: string): Observable<Scoring[]> {
+    const boothScoreRef = collection(this.firestore, 'scoring');
+    const getQuery = query(boothScoreRef, where('judge_id', '==', judgeId));
+    const boothScoreDoc = collectionData(getQuery, { idField: 'id' }) as Observable<Scoring[]>;
+    return boothScoreDoc;
   }
 }

@@ -39,6 +39,8 @@ export class EvaluationPage implements OnInit {
 
   ngOnInit() {
     this.dataService.getJudgeBooth().subscribe((judgeBooths: JudgeBooth[]) => {
+      this.judgeBooth = judgeBooths;
+
       this.dataService.getBooth().subscribe((booths: Booth[]) => {
         this.judgeBoothsWithBooths = this.dataService.combineData(judgeBooths, booths);
       });
@@ -46,6 +48,13 @@ export class EvaluationPage implements OnInit {
 
     this.dataService.getCriteria().subscribe(criteria => {
       this.criterias = criteria;
+      this.evaluationForm = this.formBuilder.group({});
+
+      this.criterias.forEach((criteria, i) => {
+        this.evaluationForm.addControl(`score${i}`, this.formBuilder.control('', Validators.required));
+      });
+    
+      this.evaluationForm.addControl('comment', this.formBuilder.control(''));
     });
 
     this.specificBooth = this.activatedRoute.snapshot.paramMap.get('id') as string;
@@ -65,12 +74,13 @@ export class EvaluationPage implements OnInit {
     await toast.present();
   }
 
-  cancelEvaluation() {
-    this.dataService.updateBoothAvailability(this.judgeBoothsWithBooths[0].booth, true);
-    this.router.navigate(['/booth']);
+  cancelEvaluation(booth: Booth) {
+    this.dataService.updateBoothAvailability(booth, true).then(() => {
+      this.router.navigate(['/booth']);
+    });
   }
 
-  submitForm() {
+  submitForm(judgeBooth: JudgeBoothWithBooth, booth: Booth) {
     this.isSubmitted = true;
     if (this.evaluationForm.valid) {
       const formValues = this.evaluationForm.value;
@@ -95,8 +105,9 @@ export class EvaluationPage implements OnInit {
         }
       });
       // Update the judgeBooth and Booth object 
-      this.dataService.updateJudgeBooth(this.judgeBooth[0]);
-      this.dataService.updateBoothAvailability(this.judgeBoothsWithBooths[0].booth, true);
+      delete judgeBooth['booth'];
+      this.dataService.updateJudgeBooth(judgeBooth, true);
+      this.dataService.updateBoothAvailability(booth, true);
 
       // Reset the form after submitting
       this.evaluationForm.reset();
