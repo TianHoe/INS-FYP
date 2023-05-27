@@ -1,35 +1,60 @@
-<body>
-    <div class="Header p-3 d-flex align-items-center" color="toolbar">
-        <ion-buttons slot="start" class="d-inline-block">
-            <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <h4 class="HeaderText me-3 my-0">Pathfinder</h4>
-        <button (click)="dijkstraSearch_A_star_variation()" class="btn myAlgorithm text-wrap lh-1 me-3" [disabled]="disableButtons">Dijkstra's Algorithm</button>
-        <button (click)="bfs_Search()" class="btn myAlgorithm text-wrap lh-1 me-3" [disabled]="disableButtons">BFS Algorithm</button>
-        <button (click)="a_star_search()" class="btn myAlgorithm text-wrap lh-1 me-3" [disabled]="disableButtons"> A* Algorithm</button>
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-header>
 
-        <div class="dropdown">
-            <button class="btn dropbtn border-none" [disabled]="disableButtons">Sample Mazes</button>
-            <div class="dropdown-content">
-                <button id="cyberjaya" name="cyberjaya" (click)="sampleMaze('assets/cyberjaya.txt')" expand="full" class="myWalls">Cyberjaya</button>
-                <!-- <button id="melaka" (click)="sampleMaze('assets/images/mainhall.txt')" expand="full" class="myWalls">Melaka Main Hall</button> -->
-            </div>
-        </div>
-    </div>
-
-    <div class="inputfield">
-        <ion-item>
+<ion-content>
+    <div>
+        <ion-item *ngIf="coordinates.includes('cyberjaya')">
             <ion-label position="floating">From</ion-label>
-            <ion-input id="from-input"></ion-input>
+            <ion-select id="from-input" interface="popover" placeholder="Select From">
+              <ion-select-option *ngFor="let option of fromOptions" [value]="option">{{ option }}</ion-select-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="coordinates.includes('mainhall')">
+            <ion-label position="floating">From</ion-label>
+            <ion-select id="from-input" interface="popover" placeholder="Select From">
+              <ion-select-option *ngFor="let option of fromOptions2" [value]="option">{{ option }}</ion-select-option>
+            </ion-select>
         </ion-item>
     
-        <ion-item>
+        <ion-item *ngIf="coordinates.includes('cyberjaya')">
             <ion-label position="floating">To</ion-label>
-            <ion-input id="to-input"></ion-input>
+            <ion-select id="to-input" interface="popover" placeholder="Select To">
+              <ion-select-option *ngFor="let option of toOptions" [value]="option">{{ option }}</ion-select-option>
+            </ion-select>
         </ion-item>
-    
+
+        <ion-item *ngIf="coordinates.includes('mainhall')">
+            <ion-label position="floating">To</ion-label>
+            <ion-select id="to-input" interface="popover" placeholder="Select To">
+              <ion-select-option *ngFor="let option of toOptions2" [value]="option">{{ option }}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        
+        <ion-item>
+            <ion-label position="floating">Algorithm</ion-label>
+            <ion-select [(ngModel)]="selectedAlgorithm" placeholder="Select Algorithm" interface="popover">
+                <ion-select-option value="dijkstra">Dijkstra's Algorithm</ion-select-option>
+                <ion-select-option value="bfs">BFS Algorithm</ion-select-option>
+                <ion-select-option value="a_star">A* Algorithm</ion-select-option>
+            </ion-select>
+        </ion-item>
+        
         <ion-button expand="full" type="button" (click)="getDirection()">Get Direction</ion-button>
     </div>
 
-    <canvas id="myCanvas" class="d-block mx-auto" style="width: 900px; height: 400px; border: none;"></canvas>
-</body>
+    <div id="canvas-container">
+      <canvas id="myCanvas" style="width: 900px; height: 400px; border: none;"></canvas>
+    </div>
+
+    <div class="maps">
+        <ion-button size="small" slot="start" color="primary" id="cyberjaya" (click)="sampleMaze('assets/images/cyberjaya.txt')">Cyberjaya</ion-button>
+        <ion-button size="small" slot="start" color="primary" id="melaka" (click)="sampleMaze('assets/images/mainhall.txt')">Melaka Main Hall</ion-button>    
+    </div>
+
+</ion-content>
