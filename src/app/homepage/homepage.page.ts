@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
-import { DataService, Event } from '../services/data.service';
+import { DataService, Event, Booth } from '../services/data.service';
 import { getAuth } from 'firebase/auth';
 
 @Component({
@@ -11,6 +11,8 @@ import { getAuth } from 'firebase/auth';
 export class HomepagePage implements OnInit {
   j:any[] = [];
   events!: Event[];
+  booths!: Booth[];
+  boothNum: number;
   auth = getAuth();
 
   constructor(private actionSheet: ActionSheetController, 
@@ -56,29 +58,34 @@ export class HomepagePage implements OnInit {
   //   await alert.present();
   // }
 
-  async presentActionSheet() {
-    const actionSheet = await this.actionSheet.create({
-      header: 'Test Action Sheet',
-      mode: 'md',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          icon: 'trash',
-          handler: () => {
-            console.log('You clicked me!');
-          }
-        }
-      ]
-    });
-    await actionSheet.present();
-  }
+  // async presentActionSheet() {
+  //   const actionSheet = await this.actionSheet.create({
+  //     header: 'Test Action Sheet',
+  //     mode: 'md',
+  //     backdropDismiss: false,
+  //     buttons: [
+  //       {
+  //         text: 'Cancel',
+  //         role: 'cancel',
+  //         icon: 'trash',
+  //         handler: () => {
+  //           console.log('You clicked me!');
+  //         }
+  //       }
+  //     ]
+  //   });
+  //   await actionSheet.present();
+  // }
 
   ngOnInit() {
     this.dataService.getEvent().subscribe(events => {
       this.events = events;
     });
-  }
 
+    this.dataService.getBooth().subscribe(booths => {
+      this.booths = booths;
+
+      this.boothNum = this.booths.length;
+    });
+  }
 }

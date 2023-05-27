@@ -28,6 +28,36 @@ export interface Booth {
   event_id: string;
   description: string;
   available: boolean;
+  location: string;
+}
+
+export interface JudgeBooth {
+  id?: string;
+  booth_id: string;
+  judge_id: string;
+  evaluated: boolean;
+}
+
+export interface JudgeBoothWithBooth extends JudgeBooth {
+  booth: Booth | null;
+}
+
+export interface Criteria {
+  id?: string;
+  max_score: number;
+  name: string;
+}
+
+export interface Scoring {
+  id?: string;
+  booth_id: string;
+  criteria_id: string;
+  judge_id: string;
+  value: number;
+}
+
+export interface ScoringWithCriteria extends Scoring {
+  criteria: Criteria | null;
 }
 
 @Injectable({
@@ -80,8 +110,88 @@ export class DataService {
     return collectionData(boothRef, { idField: 'id' }) as Observable<Booth[]>;
   }
 
-  getBoothById(id: any): Observable<Booth[]> {
+  getBoothById(id: any): Observable<Booth> {
     const boothDocRef = doc(this.firestore, `booth/${id}`);
-    return docData(boothDocRef, { idField: 'id' }) as Observable<Booth[]>;
+    return docData(boothDocRef, { idField: 'id' }) as Observable<Booth>;
+  }
+
+  updateBoothAvailability(booth: Booth, availability: boolean): Promise<void> {
+    const BoothDocRef = doc(this.firestore, `booth/${booth.id}`);
+    return updateDoc(BoothDocRef, {
+      available: availability
+    });
+  }
+
+  // JUDGE-BOOTH
+  getJudgeBooth(): Observable<JudgeBooth[]> {
+    const judgeBoothRef = collection(this.firestore, 'judge_booth');
+    return collectionData(judgeBoothRef, { idField: 'id' }) as Observable<JudgeBooth[]>;
+  }
+
+  getJudgeBoothByJudgeId(judgeId: string): Observable<JudgeBooth[]> {
+    const judgeBoothRef = collection(this.firestore, 'judge_booth');
+    const getQuery = query(judgeBoothRef, where('judge_id', '==', judgeId));
+    const judgeBoothDoc = collectionData(getQuery, { idField: 'id' }) as Observable<JudgeBooth[]>;
+    return judgeBoothDoc;
+  }
+
+  combineData(judgeBooths: JudgeBooth[], booths: Booth[]): JudgeBoothWithBooth[] {
+    return judgeBooths.map((judgeBooth) => {
+      const booth = booths.find((b) => b.id === judgeBooth.booth_id);
+      return {
+        ...judgeBooth,
+        booth: booth ? booth : null,
+      };
+    });
+  }
+
+  getCurrentJudgeBooth(boothId: string, judgeId: string): Observable<Judge[]> {
+    const judgeBoothRef = collection(this.firestore, 'judge_booth');
+    const getQuery = query(
+      judgeBoothRef, 
+      where('booth_id', '==', boothId),
+      where('judge_id', '==', judgeId));
+    const judgeBoothDoc = collectionData(getQuery, { idField: 'id' }) as Observable<Judge[]>;
+    return judgeBoothDoc;
+  }
+
+  updateJudgeBooth(judgeBooth: JudgeBooth, evaluate: boolean) {
+    const judgeBoothDocRef = doc(this.firestore, `judge_booth/${judgeBooth.id}`);
+    return updateDoc(judgeBoothDocRef, {
+      evaluated: evaluate
+    });
+  }
+
+  // CRITERIA
+  getCriteria(): Observable<Criteria[]> {
+    const criteriaRef = collection(this.firestore, 'criteria');
+    return collectionData(criteriaRef, { idField: 'id' }) as Observable<Criteria[]>;
+  }
+
+  // SCORING
+  addScoring(score: Scoring) {
+    const scoreRef = collection(this.firestore, 'scoring');
+    return addDoc(scoreRef, score);
+  }
+
+  getBoothScoring(judgeId: string, boothId: string): Observable<Scoring[]> {
+    const boothScoreRef = collection(this.firestore, 'scoring');
+    const getQuery = query(
+      boothScoreRef, 
+      where('booth_id', '==', boothId),
+      where('judge_id', '==', judgeId));
+    const boothScoreDoc = collectionData(getQuery, { idField: 'id' }) as Observable<Scoring[]>;
+    
+    return boothScoreDoc;
+  }
+
+  combineScoringCriteria(scoring: Scoring[], criterias: Criteria[]): ScoringWithCriteria[] {
+    return scoring.map((scoring) => {
+      const criteria = criterias.find((c) => c.id === scoring.criteria_id);
+      return {
+        ...scoring,
+        criteria: criteria ? criteria : null,
+      };
+    });
   }
 }
