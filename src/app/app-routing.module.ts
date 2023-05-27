@@ -48,7 +48,8 @@ const routes: Routes = [
   },
   {
     path: 'navigate',
-    loadChildren: () => import('./maps/maps.module').then( m => m.MapsPageModule)
+    loadChildren: () => import('./maps/maps.module').then( m => m.MapsPageModule),
+    canActivate: [AuthGuard]
   },
 ];
 
