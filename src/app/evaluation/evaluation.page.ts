@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Criteria, Scoring } from '../services/data.service';
+import { AuthService } from '../services/auth.service';
+import { ToastController } from '@ionic/angular';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-evaluation',
@@ -9,76 +13,116 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 
 export class EvaluationPage implements OnInit {
-  public specificBooth!: number;
-
-  public boothList = [
-    { id: 6, title: 'INS 6', 
-      members: 'This is the sixth card', 
-      description: 'Sixth description here', 
-      location: 'Lot 1-6',
-      availability: undefined },
-    { id: 3, title: 'INS 3', 
-      members: 'This is the third card', 
-      description: 'Third description here', 
-      location: 'Lot 1-3',
-      availability: false },
-    { id: 1, title: 'INS 1', 
-      members: 'This is the first card', 
-      description: 'First description here', 
-      location: 'Lot 1-1',
-      availability: true },
-    { id: 4, title: 'INS 4', 
-      members: 'This is the fourth card', 
-      description: 'Fourth description here', 
-      location: 'Lot 1-4',
-      availability: false },
-    { id: 2, title: 'INS 2', 
-      members: 'This is the second card', 
-      description: 'Second description here', 
-      location: 'Lot 1-2',
-      availability: true },
-    { id: 5, title: 'INS 5', 
-      members: 'This is the fifth card', 
-      description: 'Fifth description here', 
-      location: 'Lot 1-5',
-      availability: undefined },
-  ];
-
-  public criterias = [
-    'Originality', 
-    'Marketing value',
-    'Team capability',
-    'Impact of the product',
-    'Presetation Skill'
-  ];
+  public specificBooth!: string;
+  currentUserId: string;
+  currentJudge!: Judge;  
+  booths!: Booth[];
+  criterias!: Criteria[];
+  judgeBooth!: JudgeBooth[];
+  judgeBoothsWithBooths!: JudgeBoothWithBooth[];
 
   evaluationForm!: FormGroup;
   isSubmitted = false;
 
-  constructor(private activatedRoute: ActivatedRoute, public formBuilder: FormBuilder) { }
+  constructor(private activatedRoute: ActivatedRoute, 
+    public formBuilder: FormBuilder, 
+    private dataService: DataService, 
+    private authService: AuthService,
+    private router: Router,
+    private toastController: ToastController) {
+      this.currentUserId = authService.getUID()!;
+
+    this.dataService.getJudgeByAuthId(this.currentUserId).subscribe(judge => {
+      this.currentJudge = judge[0];
+    });
+  }
 
   ngOnInit() {
-    this.specificBooth = parseInt(this.activatedRoute.snapshot.paramMap.get('id') as string, 10);
+    this.dataService.getJudgeBooth().subscribe((judgeBooths: JudgeBooth[]) => {
+      this.judgeBooth = judgeBooths;
 
-    this.evaluationForm = this.formBuilder.group({
-      score0: ['', [Validators.required]],
-      score1: ['', [Validators.required]],
-      score2: ['', [Validators.required]],
-      score3: ['', [Validators.required]],
-      score4: ['', [Validators.required]],
-      comment: ['']
-    })
+      this.dataService.getBooth().subscribe((booths: Booth[]) => {
+        this.judgeBoothsWithBooths = this.dataService.combineData(judgeBooths, booths);
+      });
+    });
+
+    this.dataService.getCriteria().subscribe(criteria => {
+      this.criterias = criteria;
+      this.evaluationForm = this.formBuilder.group({});
+
+      this.criterias.forEach((criteria, i) => {
+        this.evaluationForm.addControl(`score${i}`, this.formBuilder.control('', Validators.required));
+      });
+    
+      this.evaluationForm.addControl('comment', this.formBuilder.control(''));
+    });
+
+    this.specificBooth = this.activatedRoute.snapshot.paramMap.get('id') as string;
   }
 
-  submitForm() {
+  range(start: number, end: number): number[] {
+    return Array(end - start + 1).fill(0).map((_, idx) => start + idx);
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Please provide all the required values!',
+      duration: 1500,
+      icon: 'close-circle',
+    });
+
+    await toast.present();
+  }
+
+  cancelEvaluation(booth: Booth) {
+    this.dataService.updateBoothAvailability(booth, true).then(() => {
+      this.router.navigate(['/booth']);
+    });
+  }
+
+  submitForm(judgeBooth: JudgeBoothWithBooth, booth: Booth) {
     this.isSubmitted = true;
-    if (!this.evaluationForm.valid) {
-      console.log('Please provide all the required values!')
-      return false;
+    if (this.evaluationForm.valid) {
+      const formValues = this.evaluationForm.value;
+
+      // Iterate over the form values
+      Object.keys(formValues).forEach(key => {
+        if (key.startsWith('score')) {
+          const criteriaIndex = parseInt(key.substring(5));
+          const criteria = this.criterias[criteriaIndex];
+          const value = formValues[key];
+
+          // Create a new Scoring object
+          const scoring: Scoring = {
+            booth_id: this.specificBooth,
+            criteria_id: criteria.id,
+            judge_id: this.currentJudge.id,
+            value: parseInt(value)
+          };
+
+          // Call the addScoring function for each scoring value
+          this.dataService.addScoring(scoring);
+        }
+      });
+      // Update the judgeBooth and Booth object 
+      delete judgeBooth['booth'];
+      this.dataService.updateJudgeBooth(judgeBooth, true);
+      this.dataService.updateBoothAvailability(booth, true);
+
+      // Reset the form after submitting
+      this.evaluationForm.reset();
+      this.router.navigate(['/booth']);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Scoring submitted',
+        text: 'Your evaluation has been submitted successfully!',
+        heightAuto: false,
+      });
+      return true;
     } else {
-      console.log(this.evaluationForm.value)
-      return true
+      this.presentToast();
+      return false;
     }
   }
-
 }

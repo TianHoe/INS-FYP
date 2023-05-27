@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
 
 import { MapsPageRoutingModule } from './maps-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 import { MapsPage } from './maps.page';
 
@@ -14,7 +15,8 @@ import { MapsPage } from './maps.page';
     FormsModule,
     IonicModule,
     HttpClientModule,
-    MapsPageRoutingModule
+    MapsPageRoutingModule,
+    SharedModule
   ],
   declarations: [MapsPage]
 })

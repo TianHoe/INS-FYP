@@ -34,9 +34,8 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'booth/evaluate/:id',
-    loadChildren: () => import('./evaluation/evaluation.module').then( m => m.EvaluationPageModule),
-    canActivate: [AuthGuard]
+    path: 'evaluate/:id',
+    loadChildren: () => import('./evaluation/evaluation.module').then( m => m.EvaluationPageModule)
   },
   {
     path: 'history',
@@ -49,7 +48,8 @@ const routes: Routes = [
   },
   {
     path: 'navigate',
-    loadChildren: () => import('./maps/maps.module').then( m => m.MapsPageModule)
+    loadChildren: () => import('./maps/maps.module').then( m => m.MapsPageModule),
+    canActivate: [AuthGuard]
   },
 ];
 

@@ -1,32 +1,38 @@
 <app-topnav-backbtn></app-topnav-backbtn>
 
 <ion-content class="ion-padding">
-  <div *ngFor="let booth of boothList">
-    <div *ngIf="booth.id === specificBooth">
-      <h2 class="p-0 font-weight-bold">{{ booth.title }}</h2>
-      <ion-text>{{ booth.members }}</ion-text>
+  <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
+    <div *ngIf="judgeBooth.booth.id === specificBooth">
+      <h2 class="p-0 fw-bold">{{ judgeBooth.booth.name }}</h2>
 
       <div class="booth-details mt-3">
-        <div class="booth-description d-flex mb-3">
+        <div class="booth-member d-flex mb-3">
           <div>
-            <ion-icon name="document-text-sharp" class="mr-3" color="info"></ion-icon>
+            <ion-icon name="people-sharp" class="me-3" color="info"></ion-icon>
           </div>
-          <div class="align-self-start">{{ booth.description }}</div>
-        </div>
-    
-        <div class="booth-location d-flex mb-3">
-          <div>
-            <ion-icon name="location-sharp" class="mr-3" color="info"></ion-icon>
-          </div>
-          <div class="align-self-start">{{ booth.location }}</div>
-        </div>
-    
-        <div class="booth-check-in-button mt-3">
-          <ion-button fill="outline" expand="block" routerLink="/booth/{{ booth.id }}">Check in</ion-button>
+          <div class="align-self-start">{{ judgeBooth.booth.members }}</div>
         </div>
 
-        <div class="booth-evaluate-button mt-3">
-          <ion-button fill="outline" expand="block" routerLink="/booth/evaluate/{{ booth.id }}">Start evaluate</ion-button>
+        <div class="booth-description d-flex mb-3">
+          <div>
+            <ion-icon name="document-text-sharp" class="me-3" color="info"></ion-icon>
+          </div>
+          <div class="align-self-start">{{ judgeBooth.booth.description }}</div>
+        </div>
+    
+        <div class="booth-location d-flex mb-3" *ngIf="judgeBooth.booth.available || judgeBooth.evaluated">
+          <div>
+            <ion-icon name="location-sharp" class="me-3" color="info"></ion-icon>
+          </div>
+          <div class="align-self-start">{{ judgeBooth.booth.location }}</div>
+        </div>
+    
+        <div class="booth-check-in-button mt-3" *ngIf="!judgeBooth.evaluated && judgeBooth.booth.available">
+          <ion-button fill="outline" expand="block" (click)="boothCheckIn()">Check in</ion-button>
+        </div>
+
+        <div class="history-button mt-3" *ngIf="judgeBooth.evaluated">
+          <ion-button fill="outline" expand="block" routerLink="/history">Evaluation History</ion-button>
         </div>
       </div>
     </div>
