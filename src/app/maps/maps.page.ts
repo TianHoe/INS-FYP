@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import Queue, { QueueWorker } from 'queue';
+import Queue from 'queue';
 
 @Component({
   selector: 'app-maps',
@@ -9,7 +9,37 @@ import Queue, { QueueWorker } from 'queue';
 })
 
 export class MapsPage implements OnInit {
-             
+  
+  selectedAlgorithm: string; // use for selection of algorithm
+
+  // Cyberjaya
+  fromOptions: string[] = ['entrance', 'entrance2'];
+  toOptions: string[] = [
+    'booth1','booth2','booth3','booth4','booth5','booth6','booth7','booth8','booth9','booth10',
+    'booth11','booth12','booth13','booth14','booth15','booth16','booth17','booth18','booth19','booth20',
+    'booth21','booth22','booth23','booth24','booth25','booth26','booth27','booth28','booth29','booth30',
+    'booth31','booth32','booth33','booth34','booth35','booth36','booth37','booth38','booth39','booth40',
+    'booth41','booth42','booth43','booth44','booth45','booth46','booth47','booth48','booth49','booth50',
+    'booth51','booth52','booth53','booth54','booth55','booth56','booth57','booth58','booth59','booth60',
+    'booth61','booth62','booth63','booth64','booth65','booth66','booth67','booth68','booth69','booth70',
+    'booth71','booth72','booth73','booth74','booth75','booth76','booth77','booth78','booth79','booth80',
+    'booth81','booth82','booth83','booth84','booth85','booth86','booth87','booth88','booth89','booth90',
+    'booth91','booth92','booth93','booth94','booth95','booth96','booth97','booth98','booth99','booth100',
+    'booth101','booth102','booth103','booth104','booth105','booth106','booth107','booth108','booth109','booth110',
+    'booth111','booth112','booth113','booth114','booth115','booth116','booth117','booth118','booth119','booth120',
+    'booth121','booth122','booth123','booth124','booth125','booth126','booth127',
+  ];
+
+  //Melaka
+  fromOptions2: string[] = ['entrance','door1','door2','door3','door4','door5'];
+  toOptions2: string[] = [
+    'booth1','booth2','booth3','booth4','booth5','booth6','booth7','booth8','booth9','booth10',
+    'booth11','booth12','booth13','booth14','booth15','booth16','booth17','booth18','booth19','booth20',
+    'booth21','booth22','booth23','booth24','booth25','booth26','booth27','booth28','booth29','booth30',
+    'booth31','booth32','booth33','booth34','booth35','booth36',
+    'technicalbooth', 'lpreproom','rpreproom','toilet','instru_room','performance',
+  ];
+
   private httpClient: HttpClient
 
   constructor(http: HttpClient, private elementRef: ElementRef) {
@@ -25,15 +55,17 @@ export class MapsPage implements OnInit {
   lineWidth = 0.0;
 
   shapes: any; //2d array of square nodes
-  canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
-  ctxGrid: any;
-
+  canvas: any = null;//document.getElementById('myCanvas') as HTMLCanvasElement;
+  ctxGrid: any = null;
+  
   drawWall = true;
   eraseWall = false;
   changeStartNode = false;
   changeEndNode = false;
 
   disableButtons = false;
+
+  coordinates: any;
 
   ngOnInit(): void {
 
@@ -56,9 +88,45 @@ export class MapsPage implements OnInit {
     this.ctxGrid.canvas.width = 1235;
     this.ctxGrid.translate(0.5, 0.5);
     
-    this.sampleMaze('assets/cyberjaya.txt');
+    this.sampleMaze('assets/images/cyberjaya.txt');
 
     this.resetGrid();
+
+    let currentZoom = 0.4;
+    const zoomFactor = 0.1;
+    const maxZoom = 3;
+    const minZoom = 0.1;
+
+    const initialCanvasWidth = 900; // Set your initial canvas width
+    const initialCanvasHeight = 350; // Set your initial canvas height
+
+    // Calculate the initial canvas size based on the current zoom level
+    const canvasWidth = initialCanvasWidth * currentZoom;
+    const canvasHeight = initialCanvasHeight * currentZoom;
+
+    // Set the initial canvas size
+    this.canvas.style.width = `${canvasWidth}px`;
+    this.canvas.style.height = `${canvasHeight}px`;
+
+    this.canvas.addEventListener('wheel', (event: WheelEvent) => {
+      const zoomOut = event.deltaY > 0;
+
+      if (zoomOut && currentZoom > minZoom) {
+        currentZoom -= zoomFactor;
+      } else if (!zoomOut && currentZoom < maxZoom) {
+        currentZoom += zoomFactor;
+      }
+
+      // Calculate the new canvas size based on the current zoom level
+      const canvasWidth = initialCanvasWidth * currentZoom;
+      const canvasHeight = initialCanvasHeight * currentZoom;
+
+      // Adjust the canvas size based on the scaling factor
+      this.canvas.style.width = `${canvasWidth}px`;
+      this.canvas.style.height = `${canvasHeight}px`;
+
+      event.preventDefault();
+    });
   }
   
   getDirection() {
@@ -67,13 +135,13 @@ export class MapsPage implements OnInit {
     this.changeStartNode = true;
     this.changeEndNode = true;
 
-    const fromInput = document.querySelector('#from-input') as HTMLIonInputElement;
-    const toInput = document.querySelector('#to-input') as HTMLIonInputElement;
-  
+    const fromInput = document.querySelector('#from-input') as HTMLIonSelectElement;
+    const toInput = document.querySelector('#to-input') as HTMLIonSelectElement;
+
     const fromValue = fromInput.value;
     const toValue = toInput.value;
 
-    const coordinates: { [key:string]: { x: number, y: number } } = {
+    const CyberCoordinates: { [key:string]: { x: number, y: number } }  = {
       entrance: { x: 8, y: 427 }, entrance2: { x:641, y: 359},
       booth1: { x:76, y: 310}, booth2: { x:120, y: 310}, booth3: { x:173, y: 310}, booth4: { x:230, y: 310}, booth5: { x:358, y: 310},
       booth6: { x:409, y: 310}, booth7: { x:461, y: 310}, booth8: { x:510, y: 310}, booth9: { x:565, y: 310}, booth10: { x:711, y: 310},
@@ -103,51 +171,69 @@ export class MapsPage implements OnInit {
       booth126: { x:1070, y: 60}, booth127: { x: 1067, y: 381}
     };
 
-    // const MelakaCoordinates = {
-    //   entrance: { x: 0, y: 0}, entrance_booth: {x:0,y:0},
-    //   booth1: { x:76, y: 310}, booth2: { x:120, y: 310}, booth3: { x:173, y: 310}, booth4: { x:230, y: 310}, booth5: { x:358, y: 310},
-    //   booth6: { x:409, y: 310}, booth7: { x:461, y: 310}, booth8: { x:510, y: 310}, booth9: { x:565, y: 310}, booth10: { x:711, y: 310},
-    //   booth11: { x:777, y: 310}, booth12: { x:800, y: 310}, booth13: { x:942, y: 310}, booth14: { x:965, y: 310}, booth15: { x:999, y: 310},
-    //   booth16: { x:1022, y: 310}, booth17: { x:1044, y: 310}, booth18: { x:1072, y: 310}, booth19: { x:1095, y: 310}, booth20: { x:68, y: 161},
-    //   booth21: { x:68, y: 186}, booth22: { x:66, y: 218}, booth23: { x:71, y: 239}, booth24: { x:68, y: 269}, booth25: { x: 178, y: 165},
-    //   booth26: { x:178, y: 189}, booth27: { x:178, y: 218}, booth28: { x:178, y: 239}, booth29: { x:178, y: 269}, booth30: { x: 215, y: 165},
-    //   booth31: { x:215, y: 186}, booth32: { x:215, y: 218}, booth33: { x:215, y: 239}, booth34: { x:215, y: 269}, booth35: { x: 319, y: 165},
-    //   booth36: { x:319, y: 186}, booth37: { x:319, y: 218}, booth38: { x:319, y: 239},
-    //   tech_booth: { x:319, y: 186}, lpreproom: { x:319, y: 218}, rpreproom: { x:319, y: 239}, toilet: { x:319, y: 186}, 
-    //   instru_room: { x:319, y: 218}, performance: { x:319, y: 239},
-    // }
-
-    // const buttonElement = this.elementRef.nativeElement.querySelector('#cyberjaya');
-    // const buttonName = buttonElement.name;
-    // console.log('Button name:', buttonName);
-
-    // // Determine the coordinates based on the selected location
-    // let coordinates;
-
-    // if (buttonName === 'cyberjaya') {
-    //   coordinates = CyberCoordinates;
-    // } else if (buttonName === 'melaka') {
-    //   coordinates = MelakaCoordinates;
-    // }
-    
-    if (typeof fromValue === 'string') {
+    if (typeof fromValue === 'string' && this.coordinates.includes('cyberjaya')) {
       const lowerCaseFromValue = fromValue.toLowerCase();
-      if (lowerCaseFromValue in coordinates) {
-        // console.log('Same value for start node');
-        const startCoordinates = coordinates[lowerCaseFromValue];
+      if (lowerCaseFromValue in CyberCoordinates) {
+        const startCoordinates = CyberCoordinates[lowerCaseFromValue];
         this.changeStart(startCoordinates.x, startCoordinates.y);
       }
     }
-    
-    if (typeof toValue === 'string') {
+
+    if (typeof toValue === 'string' && this.coordinates.includes('cyberjaya')) {
       const lowerCaseToValue = toValue.toLowerCase();
-      if (lowerCaseToValue in coordinates) {
-        // console.log('Same value for end node');
-        const endCoordinates = coordinates[lowerCaseToValue];
+      if (lowerCaseToValue in CyberCoordinates) {
+        const endCoordinates = CyberCoordinates[lowerCaseToValue];
         this.changeEnd(endCoordinates.x, endCoordinates.y);
       }
     }
-  }  
+
+    const MelakaCoordinates: { [key:string]: { x: number, y: number } }  = {
+      mainentrance: {x:618,y:515}, door1: {x:161,y:409}, door2: {x:161,y:109}, door3: {x:227,y:6}, door4: {x:1072,y:113}, door5: {x:1074,y:411}, 
+      booth1: {x:569,y:383}, booth2: {x:499,y:383}, booth3: {x:433,y:383}, booth4: {x:374,y:383}, booth5: {x:306,y:383},
+      booth6: {x:239,y:383}, booth7: {x:217,y:341}, booth8: {x:217,y:282}, booth9: {x:217,y:212}, booth10: {x:217,y:149},
+      booth11: {x:279,y:149}, booth12: {x:279,y:212}, booth13: {x:279,y:277}, booth14: {x:279,y:343}, booth15: {x:347,y:357},
+      booth16: {x:361,y:293}, booth17: {x:361,y:226}, booth18: {x:361,y:163}, booth19: {x:681,y:383}, booth20: {x:751,y:383},
+      booth21: {x:813,y:383}, booth22: {x:877,y:383}, booth23: {x:940,y:383}, booth24: {x:1006,y:383}, booth25: {x:1020,y:345},
+      booth26: {x:1020,y:278}, booth27: {x:1020,y:214}, booth28: {x:1020,y:146}, booth29: {x:958,y:149}, booth30: {x:958,y:211},
+      booth31: {x:958,y:278}, booth32: {x:958,y:342}, booth33: {x:892,y:353}, booth34: {x:877,y:293}, booth35: {x:877,y:226},
+      booth36: {x:877,y:160},
+      technicalbooth: {x:228,y:69}, lpreproom: {x:362,y:52}, rpreproom: {x:867,y:52}, toilet: {x:1005,y:42}, 
+      instru_room: {x:875,y:478}, performance: {x:611,y:238},
+    }
+
+    // Determine the coordinates based on the selected location
+    console.log(this.coordinates);
+
+    if (typeof fromValue === 'string' && this.coordinates.includes('mainhall')) {
+      const lowerCaseFromValue = fromValue.toLowerCase();
+      if (lowerCaseFromValue in MelakaCoordinates) {
+        const startCoordinates = MelakaCoordinates[lowerCaseFromValue];
+        this.changeStart(startCoordinates.x, startCoordinates.y);
+      }
+    }
+    if (typeof toValue === 'string' && this.coordinates.includes('mainhall')) {
+      const lowerCaseToValue = toValue.toLowerCase();
+      if (lowerCaseToValue in MelakaCoordinates) {
+        const endCoordinates = MelakaCoordinates[lowerCaseToValue];
+        this.changeEnd(endCoordinates.x, endCoordinates.y);
+      }
+    }
+
+    this.runAlgorithm();
+  }
+
+  runAlgorithm() {
+    if (this.selectedAlgorithm === 'dijkstra') {
+      this.dijkstraSearch_A_star_variation();
+      console.log('Dijkstra\'s Algorithm selected');
+    } else if (this.selectedAlgorithm === 'bfs') {
+      this.bfs_Search();
+      console.log('BFS Algorithm selected');
+    } else if (this.selectedAlgorithm === 'a_star') {
+      this.a_star_search();
+      console.log('A* Algorithm selected');
+    }
+  }
 
   async resetGrid() {
     this.ctxGrid.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -428,8 +514,10 @@ export class MapsPage implements OnInit {
     //let d = (Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
     return d;
   }
-  returnNeighbors(node: any) { 
-    // let neighbors = [this.shapes[node.i][node.j - 1], this.shapes[node.i][node.j + 1], this.shapes[node.i - 1][node.j], this.shapes[node.i + 1][node.j]]
+
+  returnNeighbors(node: any) {
+
+    //let neighbors = [this.shapes[node.i][node.j - 1], this.shapes[node.i][node.j + 1], this.shapes[node.i - 1][node.j], this.shapes[node.i + 1][node.j]]
 
     let neighbors = [];
     if (node.i > 0) {
@@ -457,9 +545,7 @@ export class MapsPage implements OnInit {
     let start, end;
     let path = [];
 
-
     this.findNeighbors();
-
 
     //shapes is a 2d array of squares... a grid
     for (let i = 0; i < this.shapes.length; i++) {
@@ -758,6 +844,17 @@ export class MapsPage implements OnInit {
   async sampleMaze(path: string) {
     this.httpClient.get(path + "", { responseType: 'text' })
       .subscribe(data => this.loadSampleMaze(data));
+    
+    if(path.includes('cyberjaya')) {
+      this.coordinates = "cyberjaya";
+    }
+    else if(path.includes('mainhall')) {
+      this.coordinates = "mainhall";
+    }
+
+    console.log(this.coordinates);
+
+    return this.coordinates;
   }
 
   async loadSampleMaze(data: string) {
