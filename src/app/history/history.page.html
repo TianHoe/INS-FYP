@@ -5,7 +5,7 @@
   <ion-text>Booth evaluated: {{ evaluatedCount }}/{{ assignedCount }}</ion-text>
 
   <div *ngFor="let judgeBooth of judgeBoothsWithBooths">
-    <ion-card *ngIf="evaluatedCount > 0 && judgeBooth.evaluated" class="mx-0" color="light" (click)="setOpen(true)">
+    <ion-card *ngIf="evaluatedCount > 0 && judgeBooth.evaluated" class="mx-0" color="light" (click)="setOpen(true, judgeBooth.booth)">
       <ion-card-header>
         <ion-card-title class="fw-bold">{{ judgeBooth.booth.name }}</ion-card-title>
       </ion-card-header>
@@ -15,19 +15,29 @@
     <ion-modal [isOpen]="isModalOpen">
       <ng-template>
         <ion-header>
-          <ion-toolbar>
+          <ion-toolbar color="toolbar">
             <ion-title>Scoring</ion-title>
             <ion-buttons slot="end">
-              <ion-button (click)="setOpen(false)">Close</ion-button>
+              <ion-button (click)="setOpen(false)">
+                <ion-icon name="close-sharp"></ion-icon>
+              </ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae ducimus quos
-            reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo sit cum qui. Eaque,
-            dicta.
-          </p>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-text>
+                  <h3 class="fw-bold mt-0">{{ judgeBooth.booth.name }}</h3>
+                </ion-text>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let sc of scoringWithCriteria">
+              <ion-col>{{ sc.criteria.name }}</ion-col>
+              <ion-col size="auto">{{ sc.value }}</ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-content>
       </ng-template>
     </ion-modal>

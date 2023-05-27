@@ -56,6 +56,10 @@ export interface Scoring {
   value: number;
 }
 
+export interface ScoringWithCriteria extends Scoring {
+  criteria: Criteria | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -170,10 +174,24 @@ export class DataService {
     return addDoc(scoreRef, score);
   }
 
-  getBoothScoring(judgeId: string): Observable<Scoring[]> {
+  getBoothScoring(judgeId: string, boothId: string): Observable<Scoring[]> {
     const boothScoreRef = collection(this.firestore, 'scoring');
-    const getQuery = query(boothScoreRef, where('judge_id', '==', judgeId));
+    const getQuery = query(
+      boothScoreRef, 
+      where('booth_id', '==', boothId),
+      where('judge_id', '==', judgeId));
     const boothScoreDoc = collectionData(getQuery, { idField: 'id' }) as Observable<Scoring[]>;
+    
     return boothScoreDoc;
+  }
+
+  combineScoringCriteria(scoring: Scoring[], criterias: Criteria[]): ScoringWithCriteria[] {
+    return scoring.map((scoring) => {
+      const criteria = criterias.find((c) => c.id === scoring.criteria_id);
+      return {
+        ...scoring,
+        criteria: criteria ? criteria : null,
+      };
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Scoring } from '../services/data.service';
+import { DataService, Judge, Booth, JudgeBooth, JudgeBoothWithBooth, Scoring, Criteria, ScoringWithCriteria } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -12,10 +12,15 @@ export class HistoryPage implements OnInit {
   evaluatedCount: number;
   assignedCount: number;
   currentUserId: string;
-  currentJudge!: Judge;  
+  currentJudge!: Judge;
+
   booths!: Booth[];
   judgeBooth!: JudgeBooth[];
   judgeBoothsWithBooths!: JudgeBoothWithBooth[];
+
+  criteria: Criteria[];
+  scoring: Scoring[];
+  scoringWithCriteria: ScoringWithCriteria[];
 
   isModalOpen = false;
 
@@ -41,7 +46,18 @@ export class HistoryPage implements OnInit {
     });
   }
 
-  setOpen(isOpen: boolean) {
+  setOpen(isOpen: boolean, booth?: Booth) {
     this.isModalOpen = isOpen;
+
+    if(booth) {
+      console.log(this.currentJudge.id);
+      console.log(booth.id);
+
+      this.dataService.getBoothScoring(this.currentJudge.id, booth.id).subscribe((scoring: Scoring[]) => {
+        this.dataService.getCriteria().subscribe((criteria: Criteria[]) => {
+          this.scoringWithCriteria = this.dataService.combineScoringCriteria(scoring, criteria);
+        })
+      })
+    }
   }
 }
