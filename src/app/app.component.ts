@@ -12,8 +12,8 @@ export class AppComponent {
   public appPages = [
     { title: 'Home', url: '/homepage', icon: 'home' },
     { title: 'Profile', url: '/profile', icon: 'person' },
+    { title: 'Booth', url: '/booth', icon: 'list' },
     { title: 'Navigation', url: '/navigate', icon: 'navigate' },
-    { title: 'Booth List', url: '/booth', icon: 'list' },
     { title: 'History', url: '/history', icon: 'archive' },
   ];
 
