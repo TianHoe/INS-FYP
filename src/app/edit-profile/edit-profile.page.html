@@ -7,17 +7,17 @@
     <ion-item>
       <ion-label position="stacked">Name</ion-label>
       <ion-input value="{{ currentJudge.name }}" disabled="true"></ion-input>
-    </ion-item>  
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Email address</ion-label>
+      <ion-input value="{{ currentJudge.email }}" disabled="true"></ion-input>
+    </ion-item>
 
     <div class="profile-details">
       <ion-item>
         <ion-label position="stacked">Contact number</ion-label>
         <ion-input [(ngModel)]="judge.contactnum" name="contactnum" value="{{ currentJudge.contactnum }}" required></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">Email address</ion-label>
-        <ion-input [(ngModel)]="judge.email" name="email" value="{{ currentJudge.email }}" required></ion-input>
       </ion-item>
 
       <div class="save-profile-button mt-3">
