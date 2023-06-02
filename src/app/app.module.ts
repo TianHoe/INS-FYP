@@ -18,7 +18,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { environment } from '../environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +26,7 @@ import { environment } from '../environments/environment';
     BrowserModule, 
     IonicModule.forRoot(), 
     AppRoutingModule, 
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)), 
+    provideFirebaseApp(() => initializeApp(environment.firebase)), 
     provideAnalytics(() => getAnalytics()), 
     provideAuth(() => getAuth()), 
     provideDatabase(() => getDatabase()), 

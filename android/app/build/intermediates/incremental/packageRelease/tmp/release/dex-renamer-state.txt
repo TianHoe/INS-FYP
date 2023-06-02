@@ -1,0 +1,4 @@
+#Mon May 29 16:51:09 MYT 2023
+base.0=D\:\\sourcetree\\INS-FYP\\android\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
